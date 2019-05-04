@@ -1,4 +1,94 @@
 ﻿@page "/nerdcast"
+@inject HttpClient Http
+@using PodcastManager.Models.NerdCast
 
 <h1>NerdCast</h1>
 
+@if (podcasts == null)
+{
+    <p><em>@userMessage</em></p>
+}
+else
+{
+    <div style="width:100%;height:100%;">
+        @foreach (var podcast in podcasts)
+        {
+            <div class="highlight__content" style="margin:2rem;">
+                <footer class="highlight__content__footer">
+
+                    <h3 class="highlight__content-category-title">
+                        <a href="https://jovemnerd.com.br/nerdcast/">
+                            <span class="screen-reader-text"></span>@GetEpisodeName(podcast.PostTypeClass) @podcast.EpisodeNumber
+                        </a>
+                    </h3>
+
+                    <h2 class="highlight__content-title">
+                        <a href="@podcast.AudioHigh">@podcast.Title</a>
+                    </h2>
+                </footer>
+                <a href="@podcast.AudioHigh">
+                    <img src="@podcast.Image" alt="podcast @podcast.Title cover">
+                </a>
+            </div>
+        }
+    </div>
+}
+
+@functions {
+    List<Episode> podcasts;
+    string userMessage = "Carregando..";
+
+    string GetEpisodeName(string textToChange)
+    {
+        System.Text.StringBuilder resultBuilder = new System.Text.StringBuilder();
+
+        foreach (char c in textToChange)
+        {
+            if (!Char.IsLetterOrDigit(c))
+            {
+                resultBuilder.Append(" ");
+            }
+            else
+            {
+                resultBuilder.Append(c);
+            }
+        }
+
+        var result = resultBuilder.ToString().ToLower();
+        var myTI = System.Globalization.CultureInfo.CurrentCulture.TextInfo;
+
+        return myTI.ToTitleCase(result).Replace(" ", String.Empty);
+    }
+
+    protected override async Task OnInitAsync()
+    {
+        try
+        {
+            var response = await Http.GetAsync("https://api.jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts");
+            var content = await response.Content.ReadAsStringAsync();
+            userMessage = content;
+            var nerdCasts = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Episode>>(content);
+
+            response = await Http.GetAsync("https://api.jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/");
+            content = await response.Content.ReadAsStringAsync();
+            userMessage = content;
+            var nerdCastsAlternative = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Episode>>(content);
+
+
+            podcasts = nerdCasts[0]?.PublishedAt > nerdCastsAlternative[0]?.PublishedAt
+                    ? nerdCasts : nerdCastsAlternative;
+        }
+        catch (Exception ex)
+        {
+            var exceptionMessage = ex.Message;
+            var stackTrace = ex.StackTrace;
+            if (ex.InnerException != null)
+            {
+                exceptionMessage = ex.InnerException.Message;
+                stackTrace = ex.InnerException.StackTrace;
+            }
+
+            userMessage = $"Oops! ocorreu um erro no carregamento!\n\tDetalhes:\n\t{exceptionMessage}\n\t{stackTrace}";
+        }
+    }
+}

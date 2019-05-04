@@ -1,3 +1,71 @@
 ﻿@page "/naoouvo"
+@inject HttpClient Http
+@using PodcastManager.Models.NaoOuvo
+@using Newtonsoft.Json
+@using Newtonsoft.Json.Linq
 
 <h1>NãoOuvo</h1>
+@if (podcasts == null)
+{
+    <p><em>@userMessage</em></p>
+}
+else
+{
+
+    <div style="width:100%;height:100%;">
+        @foreach (var podcast in podcasts)
+        {
+            <div class="highlight__content" style="margin:2rem; max-width:100%">
+                <footer class="highlight__content__footer">
+
+                    <h3 class="highlight__content-category-title">
+                        <span class="screen-reader-text"></span>@podcast.Subtitle @podcast.Description
+                    </h3>
+
+                    <h2 class="highlight__content-title">
+                        <a href="@podcast.Url">@podcast.Title</a>
+                    </h2>
+                </footer>
+                <a href="@podcast.Url">
+                    <img src="@podcast.Image" width="760" height="428" alt="podcast @podcast.Title cover">
+                </a>
+            </div>
+        }
+    </div>
+}
+
+@functions {
+    List<Episode> podcasts;
+    string userMessage = "Carregando..";
+
+    protected override async Task OnInitAsync()
+    {
+        try
+        {
+            var xmlString = await Http.GetStringAsync("https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fwww.naosalvo.com.br%2Fpodcast%2Ffeed.xml");
+            var jsonObject = JObject.Parse(xmlString);
+            var items = jsonObject.GetValue("items") as JArray;
+
+            podcasts = items.Select(e =>
+            {
+                var jsonStr = e.ToString();
+                var episode = JsonConvert.DeserializeObject<Episode>(jsonStr);
+                episode.Image = e.SelectToken("thumbnail").Value<string>();
+                return episode;
+
+            }).ToList();
+        }
+        catch (Exception ex)
+        {
+            var exceptionMessage = ex.Message;
+            var stackTrace = ex.StackTrace;
+            if (ex.InnerException != null)
+            {
+                exceptionMessage = ex.InnerException.Message;
+                stackTrace = ex.InnerException.StackTrace;
+            }
+
+            userMessage = $"Oops! ocorreu um erro no carregamento!\n\tDetalhes:\n\t{exceptionMessage}\n\t{stackTrace}";
+        }
+    }
+}

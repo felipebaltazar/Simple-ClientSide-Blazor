@@ -8,6 +8,8 @@
     </RestoreAdditionalProjectSources>
     <LangVersion>7.3</LangVersion>
     <RazorLangVersion>3.0</RazorLangVersion>
+    <RootNamespace>Simple_ClientSide_Blazor</RootNamespace>
+    <AssemblyName>Simple-ClientSide-Blazor</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Blazor.Build" Version="3.0.0-preview4-19216-03" PrivateAssets="all" />
     <PackageReference Include="Microsoft.AspNetCore.Blazor.DevServer" Version="3.0.0-preview4-19216-03" PrivateAssets="all" />
     <PackageReference Include="PodcastManager" Version="2.1.0" />
+    <PackageReference Include="Refit" Version="4.6.107" />
   </ItemGroup>
 
 </Project>
