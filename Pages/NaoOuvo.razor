@@ -15,7 +15,7 @@ else
     <div style="width:100%;height:100%;">
         @foreach (var podcast in podcasts)
         {
-            <div class="highlight__content" style="margin:2rem; max-width:100%">
+            <div class="highlight__content" style="margin:2rem;max-width:calc(100% - 4rem);">
                 <footer class="highlight__content__footer">
 
                     <h3 class="highlight__content-category-title">
@@ -27,7 +27,7 @@ else
                     </h2>
                 </footer>
                 <a href="@podcast.Url">
-                    <img src="@podcast.Image" width="760" height="428" alt="podcast @podcast.Title cover">
+                    <img src="@podcast.Image" style="width:100%; max-width:100%;" alt="podcast @podcast.Title cover">
                 </a>
             </div>
         }

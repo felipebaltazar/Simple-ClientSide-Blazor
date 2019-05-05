@@ -4,6 +4,8 @@ Read this in other languages: [Português](README.md), [English](README.en.md)
 
 Página criada com a tecnologia [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/client) para listar principais podcasts brasileiros
 
+[Acesse a aplicação rodando](http://podcast-center.azurewebsites.net/)
+
 Podcasts integrados (via [Podcast Manager](https://github.com/felipebaltazar/PodcastManager)):
 
 | Podcast                                                                                                                                                                                          | Lista de episódios | Informação adicional                                                                                       | Método                               | Status |

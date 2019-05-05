@@ -13,7 +13,7 @@ else
     <div style="width:100%;height:100%;">
         @foreach (var podcast in podcasts)
         {
-            <div class="highlight__content" style="margin:2rem;">
+            <div class="highlight__content" style="margin:2rem;max-width:calc(100% - 4rem);">
                 <footer class="highlight__content__footer">
 
                     <h3 class="highlight__content-category-title">
@@ -27,7 +27,7 @@ else
                     </h2>
                 </footer>
                 <a href="@podcast.AudioHigh">
-                    <img src="@podcast.Image" alt="podcast @podcast.Title cover">
+                    <img src="@podcast.Image" style="max-width:100%;" alt="podcast @podcast.Title cover">
                 </a>
             </div>
         }
@@ -64,13 +64,11 @@ else
     {
         try
         {
-            var response = await Http.GetAsync("https://api.jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts");
-            var content = await response.Content.ReadAsStringAsync();
+            var content = await Http.GetStringAsync("https://cors-anywhere.herokuapp.com/https://api.jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts");
             userMessage = content;
             var nerdCasts = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Episode>>(content);
 
-            response = await Http.GetAsync("https://api.jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/");
-            content = await response.Content.ReadAsStringAsync();
+            content = await Http.GetStringAsync("https://cors-anywhere.herokuapp.com/https://api.jovemnerd.com.br/wp-json/jovemnerd/v1/nerdcasts/");
             userMessage = content;
             var nerdCastsAlternative = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Episode>>(content);
 

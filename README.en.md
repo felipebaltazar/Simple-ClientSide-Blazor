@@ -4,6 +4,8 @@ Read this in other languages: [Português](README.md), [English](README.en.md)
 
 This project has been created with [Blazor](https://dotnet.microsoft.com/apps/aspnet/web-apps/client), to list brazilian podcasts.
 
+[Access the application](http://podcast-center.azurewebsites.net/)
+
 Podcasts integrateds (with [Podcast Manager](https://github.com/felipebaltazar/PodcastManager)):
 
 | Podcast                                                                                                                                                                                          | Episode list | Additional Info                                                                                       | Method                               | Status |
